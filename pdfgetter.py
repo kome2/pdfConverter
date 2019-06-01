@@ -7,7 +7,7 @@ import multiprocessing
 import threading
 
 ## edit here!!!
-urlHeader = "http://www.omegatiming.com/Competition?id=000112010cffffffffffffffffffffff&day="
+urlHeader = "http://www.omegatiming.com/Competition?id=000111010AFFFFFFFFFFFFFFFFFFFFFF&day="
 
 
 def download(url, title):

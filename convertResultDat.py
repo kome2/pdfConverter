@@ -104,6 +104,7 @@ with open(sys.argv[1], 'rb') as f:
         
         for box in boxes:
             text = box.get_text()
+            print(text)
             if evDateFlag == False:
                 if "Event" in text:
                     evDate = text.split("\n")[1].split(" ")
