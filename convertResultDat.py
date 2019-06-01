@@ -104,9 +104,8 @@ with open(sys.argv[1], 'rb') as f:
         
         for box in boxes:
             text = box.get_text()
-            print(text)
             if evDateFlag == False:
-                if "Event" in text:
+                if "Event" in text or "EVENT" in text:
                     evDate = text.split("\n")[1].split(" ")
                     evDate = evDate[2] + "/" + str(months[evDate[1]]).zfill(2) + "/" + evDate[0].zfill(2)
                     evDateFlag = True
@@ -124,11 +123,14 @@ with open(sys.argv[1], 'rb') as f:
                         heatNum = number
                 if birthbool == True:
                     births = text.split("\n")
-                    if semi == True:
+                    if semi == True and heatNum == 1:
                         heatNum += 1
                     for i in range(len(lanes)):
                         birth = births[i].split(" ")
-                        birth = birth[2] + "/" + str(months[birth[1]]).zfill(2) + "/" + birth[0].zfill(2)
+                        if birth[0].isdecimal():
+                            birth = birth[2] + "/" + str(months[birth[1]]).zfill(2) + "/" + birth[0].zfill(2)
+                        else:
+                            birth = ""
                         print(sexNum, ",", styleNum, ",", distNum, ",", yoketsuNum, ",", heatNum, ",", lanes[i], ",", kikenNum, ",", relayDSQNum, ",,", teams[i], ",", "(swimmer id)", ",", sexNum, ",", names[i], ",", birth, ",,,,,,,,,,,,,", schoolNum, ",", "0", ",", evDate, ",,", "(team id)",",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
                     if yoketsuNum == 6:
                         semi = True
