@@ -22,10 +22,20 @@ def pdfextract(fp):
     styleData = fp.find(class_="round").string # Women's Freestyle 800m Final
 
     urls = fp.find_all(class_="two")
+    stArray = styleData.split(" ")
+    
+    # 予決分け
+    if session == "e" and stArray[3] == "Preliminary":
+        return
+    if session == "m" and stArray[3] == "Final":
+        return
+    if session == "m" and stArray[3] == "Semi-Final":
+        return
+    
     stUrl = urls[0].a.get("href") # startlist Url
     reUrl = urls[1].a.get("href") # result url
     prefix = "http://www.omegatiming.com"
-    stArray = styleData.split(" ")
+
     if stArray[0] == "Men's":
         stArray[0] = "Men"
     elif stArray[0] == "Women's":
