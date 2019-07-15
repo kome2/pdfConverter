@@ -40,7 +40,8 @@ def pdfextract(fp):
         stArray[0] = "Men"
     elif stArray[0] == "Women's":
         stArray[0] = "Women"
-    fname = stArray[0] + stArray[2] + stArray[1] + stArray[3] + ".pdf"
+    fname = "./output/pdf/day" + day + session + "/"
+    fname += stArray[0] + "_" + stArray[2] + "_" + stArray[1] + "_" + stArray[3] + ".pdf"
 
     download(prefix + stUrl, fname)
 
