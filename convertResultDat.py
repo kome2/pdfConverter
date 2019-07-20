@@ -131,6 +131,8 @@ with open(sys.argv[1], 'rb') as f:
                             birth = birth[2] + "/" + str(months[birth[1]]).zfill(2) + "/" + birth[0].zfill(2)
                         else:
                             birth = ""
+                        if names[i] == 'Name':
+                            continue
                         print(sexNum, ",", styleNum, ",", distNum, ",", yoketsuNum, ",", heatNum, ",", lanes[i], ",", kikenNum, ",", relayDSQNum, ",,", teams[i], ",", "(swimmer id)", ",", sexNum, ",", names[i], ",", birth, ",,,,,,,,,,,,,", schoolNum, ",", "0", ",", evDate, ",,", "(team id)",",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
                     if yoketsuNum == 6:
                         semi = True
@@ -140,9 +142,9 @@ with open(sys.argv[1], 'rb') as f:
                     teams = text.split("\n")
                     teambool = False
                     birthbool = True
-                if rank == True and len(lanes) == 0:
+                if len(lanes) == 0 and 'Lane' in text:
                     lanes = text.split()
-                elif rank == True:
+                elif rank == True and 'Name' in text:
                     names = text.split("\n")
                     for i in range(len(lanes)):
                         name = names[i]
@@ -193,7 +195,10 @@ with open(sys.argv[1], 'rb') as f:
                     "Semi" not in output_txt):
                 output_txt += "_" + text.split("\n")[0]
                 prefix = output_txt
-                yoketsuNum = yoketsuId[text.split("\n")[0]]
+                if text.split("\n")[0] == 'Preliminary':
+                    yoketsuNum = yoketsuId['Heats']
+                else:
+                    yoketsuNum = yoketsuId[text.split("\n")[0]]
             if "Reserves" in text:
                 break
             if "Rank" in text:
