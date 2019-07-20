@@ -17,7 +17,7 @@ def download(url, title):
     urllib.request.urlretrieve(url, "{0}".format(title))
     print(title, ": success!")
 
-def pdfextract(fp):
+def pdfextract(fp, i):
     if len(fp) < 5:
         return
     styleData = fp.find(class_="round").string # Women's Freestyle 800m Final
@@ -44,7 +44,7 @@ def pdfextract(fp):
     elif stArray[0] == "Women's":
         stArray[0] = "Women"
     fname = "./output/pdf/day" + day + session + "/"
-    fname += stArray[0] + "_" + stArray[2] + "_" + stArray[1] + "_" + stArray[3] + ".pdf"
+    fname += day + session + "_" + str(i) + "_" + stArray[0] + "_" + stArray[2] + "_" + stArray[1] + "_" + stArray[3] + ".pdf"
 
     download(prefix + stUrl, fname)
 
@@ -66,6 +66,8 @@ if __name__ == "__main__":
 
         # 種目ブロックの抽出
         # class = rowごとに種目セットになっている
+        i = 0
         for row in div.find_all(class_="row"):
-            p = threading.Thread(target=pdfextract, args=([row]))
+            p = threading.Thread(target=pdfextract, args=([row, i]))
+            i += 1
             p.start()
