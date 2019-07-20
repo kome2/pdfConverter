@@ -8,7 +8,7 @@ from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from pdfminer.pdfpage import PDFPage
 
 ## edit here!!
-gameName = "WorldShort2018"
+gameName = "WorldChamp2019"
 
 def find_textboxes_recursively(layout_obj):
     """
@@ -104,16 +104,20 @@ with open(sys.argv[1], 'rb') as f:
                         number = int(text.split(" ")[2])
                     else:
                         number = int(text.split(" ")[1])
-                if rank == True and len(lanes) == 0:
+                if len(lanes) == 0 and 'Lane' in text:
                     lanes = text.split()
-                elif rank == True:
+                elif 'Name' in text:
                     names = text.split("\n")
                     if semi == True:
                         thisHeat = prefix + "_" + str(seminumber) + "_AgeGroup0_["
                         seminumber += 1
                     elif semi == False:
                         thisHeat = prefix + "_" + str(number) + "_AgeGroup0_["
+                    if len(lanes) == 0:
+                        continue
                     for i in range(len(lanes)):
+                        if i == 0:
+                            continue
                         name = names[i]
                         name = name.replace(" - ", "_")
                         name = name.replace(" ", "_")
