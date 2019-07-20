@@ -7,7 +7,8 @@ import multiprocessing
 import threading
 
 ## edit here!!!
-gameUrl = "http://www.omegatiming.com/2019/tyr-pro-swim-series-5-clovis-live-results"
+## gameUrl = "http://www.omegatiming.com/2019/tyr-pro-swim-series-5-clovis-live-results"
+gameUrl = "http://www.omegatiming.com/2019/18th-fina-world-championships-sw-live-results"
 
 def download(url, title):
     # string url: download target url
@@ -31,9 +32,11 @@ def pdfextract(fp):
         return
     if session == "m" and stArray[3] == "Semi-Final":
         return
-    
+    if 'href' not in str(urls[0]):
+        return
+
     stUrl = urls[0].a.get("href") # startlist Url
-    reUrl = urls[1].a.get("href") # result url
+    # reUrl = urls[1].a.get("href") # result url
     prefix = "http://www.omegatiming.com"
 
     if stArray[0] == "Men's":
