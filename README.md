@@ -5,9 +5,9 @@ python3.5以上
 Ubuntu18.04  
 
 # 必要なパッケージ
-pdfminer
-bs4
-urllib
+pdfminer  
+bs4  
+urllib  
   
   
 # 各プログラムの用途  
