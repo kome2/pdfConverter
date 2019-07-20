@@ -71,6 +71,11 @@ ir = "i"
 with open(sys.argv[1], 'rb') as f:
     # PDFPage.get_pages()にファイルオブジェクトを指定して、PDFPageオブジェクトを順に取得する。
     # 時間がかかるファイルは、キーワード引数pagenosで処理するページ番号（0始まり）のリストを指定するとよい。
+    if '4x' in sys.argv[1]:
+        print("Cannot use this script for Relay Events")
+        print('Input File: ' + sys.argv[1] + "\n")
+        exit()
+
     rank = False
     lanes = []
     number = 1
