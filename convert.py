@@ -106,8 +106,15 @@ with open(sys.argv[1], 'rb') as f:
                         number = int(text.split(" ")[1])
                 if len(lanes) == 0 and 'Lane' in text:
                     lanes = text.split()
-                elif 'Name' in text:
+                    numLane = lanes.index('Lane')
+                    lanes = lanes[numLane + 1:]
+                    # 'Lane' の次から最後までを格納
+                elif 'Name' in text or ('NAT' in text and 'code' not in text):
+                    if 'BEST' in text:
+                        continue
                     names = text.split("\n")
+                    # 'Name'の次から最後まで格納
+                    names = names[1:]
                     if semi == True:
                         thisHeat = prefix + "_" + str(seminumber) + "_AgeGroup0_["
                         seminumber += 1
@@ -116,8 +123,6 @@ with open(sys.argv[1], 'rb') as f:
                     if len(lanes) == 0:
                         continue
                     for i in range(len(lanes)):
-                        if i == 0:
-                            continue
                         name = names[i]
                         name = name.replace(" - ", "_")
                         name = name.replace(" ", "_")
