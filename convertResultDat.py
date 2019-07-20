@@ -143,7 +143,7 @@ with open(sys.argv[1], 'rb') as f:
                         semi = True
                     birthbool = False
                     lanes = []
-                if 'NAT' in text:
+                if 'NAT' in text and 'NATO' not in text:
                     teams = text.split("\n")
                     teambool = False
                     birthbool = True
