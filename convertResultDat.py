@@ -138,13 +138,13 @@ with open(sys.argv[1], 'rb') as f:
                         semi = True
                     birthbool = False
                     lanes = []
-                if teambool == True:
+                if 'NAT' in text:
                     teams = text.split("\n")
                     teambool = False
                     birthbool = True
                 if len(lanes) == 0 and 'Lane' in text:
                     lanes = text.split()
-                elif rank == True and 'Name' in text:
+                elif 'Name' in text:
                     names = text.split("\n")
                     for i in range(len(lanes)):
                         name = names[i]
