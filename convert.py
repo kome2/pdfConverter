@@ -160,10 +160,12 @@ with open(sys.argv[1], 'rb') as f:
                 ir = "i"
             elif "_" in output_txt and\
                     ("Heat" not in output_txt or\
+                    "Preliminary" not in output_txt or\
                     "Final" not in output_txt or\
                     "Swim-Off" not in output_txt or\
                     "Semi" not in output_txt):
                 output_txt += "_" + text.split("\n")[0]
+                output_txt = output_txt.replace('Preliminary','Heats')
                 prefix = output_txt
                 if "Semi" in prefix:
                     semi = True
