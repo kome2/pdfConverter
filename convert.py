@@ -84,6 +84,7 @@ with open(sys.argv[1], 'rb') as f:
     number = 1
     semi = False
     seminumber = 1
+    semi2 = False
     for page in PDFPage.get_pages(f):
         # print_and_write('\n====== ページ区切り ======\n')
         interpreter.process_page(page)  # ページを処理する。
@@ -117,7 +118,8 @@ with open(sys.argv[1], 'rb') as f:
                     names = names[1:]
                     if semi == True:
                         thisHeat = prefix + "_" + str(seminumber) + "_AgeGroup0_["
-                        seminumber += 1
+                        if semi2 == True:
+                            seminumber += 1
                     elif semi == False:
                         thisHeat = prefix + "_" + str(number) + "_AgeGroup0_["
                     if len(lanes) == 0:
@@ -129,7 +131,7 @@ with open(sys.argv[1], 'rb') as f:
                         name = name.replace("-", "_")
                         thisHeat += lanes[i] + "#" + name + "-"
                     thisHeat = "CamXX_" + gameName + "_" + thisHeat[:-1] + "].mp4\n"
-                    #print(thisHeat)
+                    semi2 = True
                     allData += thisHeat
                     rank = False
                     lanes = []
