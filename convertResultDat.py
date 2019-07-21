@@ -94,6 +94,7 @@ with open(sys.argv[1], 'rb') as f:
     relayDSQNum = 0
     schoolNum = 5
     heatNum = 1 
+    qBool = False 
 
     for page in PDFPage.get_pages(f):
         # print_and_write('\n====== ページ区切り ======\n')
@@ -126,7 +127,8 @@ with open(sys.argv[1], 'rb') as f:
                         # 普通の予選
                         number = int(text.split(" ")[1])
                         heatNum = number
-                if birthbool == True:
+                #if birthbool == True:
+                if qBool == True:
                     births = text.split("\n")
                     if semi == True and heatNum == 1:
                         heatNum += 1
@@ -143,6 +145,7 @@ with open(sys.argv[1], 'rb') as f:
                         semi = True
                     birthbool = False
                     lanes = []
+                    qBool = False
                 if 'NAT' in text and 'NATO' not in text:
                     teams = text.split("\n")
                     teambool = False
@@ -159,6 +162,8 @@ with open(sys.argv[1], 'rb') as f:
                         names[i] = name
                     rank = False
                     teambool = True
+                if 'Qualifying' in text:
+                    qBool = True
             elif "Men's" in text and "men" not in output_txt:
                 sexNum = sexId["Men"]
                 if text.count(os.linesep) != 1:
