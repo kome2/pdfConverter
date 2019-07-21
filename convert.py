@@ -110,12 +110,18 @@ with open(sys.argv[1], 'rb') as f:
                     numLane = lanes.index('Lane')
                     lanes = lanes[numLane + 1:]
                     # 'Lane' の次から最後までを格納
-                elif 'Name' in text or ('NAT' in text and 'code' not in text):
+                elif rank == True and len(lanes) == 0 and 'Relay' in prefix:
+                    lanes = text.split()
+                elif 'Name' in text or ('NAT' in text and 'code' not in text)\
+                        or (rank == True and len(lanes) != 0 and 'Relay' in prefix):
                     if 'BEST' in text:
+                        continue
+                    if rank == False and 'Relay' in prefix:
                         continue
                     names = text.split("\n")
                     # 'Name'の次から最後まで格納
-                    names = names[1:]
+                    if names[0] == "Name":
+                        names = names[1:]
                     if semi == True:
                         thisHeat = prefix + "_" + str(seminumber) + "_AgeGroup0_["
                         if semi2 == True:
