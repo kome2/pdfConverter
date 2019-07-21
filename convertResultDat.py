@@ -10,7 +10,7 @@ from pdfminer.pdfpage import PDFPage
 sexId = {"Men":1, "Women":2, "Mixed":3}
 styleId = {"FreeStyle":1, "BackStroke":2, "BreastStroke":3, "Butterfly":4, "IndividualMedley":5, "FreeRelay":6, "MedleyRelay":7}
 distId = {"25m":1, "50m":2, "100m":3, "200m":4, "400m":5, "800m":6, "1500m":7, "300m":8, "75m":9}
-yoketsuId = {"Heats":1, "Timedfinal":2, "BFinal":3, "Final":4, "Swim-Off":5, "Semifinals":6}
+yoketsuId = {"Heats":1, "Timedfinal":2, "BFinal":3, "Final":4, "Swim-Off":5, "Semifinal":6}
 kikenId = {"complete":0, "DNS":1, "DSQ":2, "DNSInRace":3, "OPEN":4, "DSQ(OPEN)":5, "DNS(OPEN)":6}
 dsqSwimmerId = {"complete":0, "1":1, "2":2, "3":3, "4":4}
 schoolId = {"toddler":0, "ES":1, "JHS":2, "HS":3, "UNIV":4, "ADULT":5, "KOSEN":6}
