@@ -85,6 +85,13 @@ with open(sys.argv[1], 'rb') as f:
     semi = False
     seminumber = 1
     semi2 = False
+    teams = []
+    jpnFlag = False
+
+    if len(sys.argv) == 3:
+        if sys.argv[2] == "-j":
+            jpnFlag = True
+
     for page in PDFPage.get_pages(f):
         # print_and_write('\n====== ページ区切り ======\n')
         interpreter.process_page(page)  # ページを処理する。
@@ -105,6 +112,8 @@ with open(sys.argv[1], 'rb') as f:
                         number = int(text.split(" ")[2])
                     else:
                         number = int(text.split(" ")[1])
+                if 'NAT' in text and 'NATO' not in text:
+                    teams = text.split("\n")
                 if len(lanes) == 0 and 'Lane' in text:
                     lanes = text.split()
                     numLane = lanes.index('Lane')
@@ -139,10 +148,14 @@ with open(sys.argv[1], 'rb') as f:
                         name = name.replace(" - ", "_")
                         name = name.replace(" ", "_")
                         name = name.replace("-", "_")
-                        thisHeat += lanes[i] + "#" + name + "-"
+                        if 'JPN' in teams[i + 1] and jpnFlag == True:
+                            thisHeat += lanes[i] + "#" + name + "-"
+                        elif jpnFlag == False:
+                            thisHeat += lanes[i] + "#" + name + "-"
                     thisHeat = "CamXX_" + gameName + "_" + thisHeat[:-1] + "].mp4\n"
+                    if jpnFlag == True and "[" in thisHeat or jpnFlag == False:
+                        allData += thisHeat
                     semi2 = True
-                    allData += thisHeat
                     rank = False
                     lanes = []
             elif "Men's" in text and "men" not in output_txt:
