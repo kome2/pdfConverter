@@ -7,8 +7,6 @@ from pdfminer.layout import LAParams, LTContainer, LTTextBox
 from pdfminer.pdfinterp import PDFPageInterpreter, PDFResourceManager
 from pdfminer.pdfpage import PDFPage
 
-## edit here!!
-gameName = "WorldChamp2019"
 
 def find_textboxes_recursively(layout_obj):
     """
@@ -60,7 +58,7 @@ interpreter = PDFPageInterpreter(resource_manager, device)
 
 # 出力用のテキストファイル
 filename = os.path.basename(sys.argv[1])
-outputfilename = "output/text/" + os.path.splitext(filename)[0] + "_out.txt"
+outputfilename = "output/" + os.path.splitext(filename)[0] + "_out.txt"
 
 outputfile = open(outputfilename, 'w')
 output_txt = ""
@@ -80,11 +78,13 @@ with open(sys.argv[1], 'rb') as f:
     # 時間がかかるファイルは、キーワード引数pagenosで処理するページ番号（0始まり）のリストを指定するとよい。
     rank = False
     lanes = []
+    names = []
+    teams = []
     thisHeat = ""
     number = 1
-    semi = False
-    seminumber = 1
-    semi2 = False
+    jpn = False
+    relayFlg = False
+
     for page in PDFPage.get_pages(f):
         # print_and_write('\n====== ページ区切り ======\n')
         interpreter.process_page(page)  # ページを処理する。
@@ -105,55 +105,52 @@ with open(sys.argv[1], 'rb') as f:
                         number = int(text.split(" ")[2])
                     else:
                         number = int(text.split(" ")[1])
-                if len(lanes) == 0 and 'Lane' in text:
+                if rank == True and len(lanes) == 0:
                     lanes = text.split()
-                    numLane = lanes.index('Lane')
-                    lanes = lanes[numLane + 1:]
-                    # 'Lane' の次から最後までを格納
-                elif rank == True and len(lanes) == 0 and 'Relay' in prefix:
-                    lanes = text.split()
-                    if lanes[0].isdigit() != True:
-                        lanes = []
-                elif 'Name' in text or ('NAT' in text and 'code' not in text)\
-                        or (rank == True and len(lanes) != 0 and 'Relay' in prefix):
-                    if 'BEST' in text:
-                        continue
-                    if rank == False and 'Relay' in prefix and 'Final' in prefix:
-                        continue
+                elif rank == True and len(names) == 0:
                     names = text.split("\n")
-                    # 'Name'の次から最後まで格納
-                    if 'Entry' in text:
-                        continue
-                    if names[0] == "Name" or names[0] == 'NAT':
-                        names = names[1:]
-                    if semi == True:
-                        thisHeat = prefix + "_" + str(seminumber) + "_AgeGroup0_["
-                        if semi2 == True:
-                            seminumber += 1
-                    elif semi == False:
-                        thisHeat = prefix + "_" + str(number) + "_AgeGroup0_["
-                    if len(lanes) == 0:
-                        continue
+                    thisHeat = prefix + "_" + str(number) + "_AgeGroup0_["
                     for i in range(len(lanes)):
-                        name = names[i]
-                        name = name.replace(" - ", "_")
-                        name = name.replace(" ", "_")
-                        name = name.replace("-", "_")
-                        thisHeat += lanes[i] + "#" + name + "-"
-                    thisHeat = "CamXX_" + gameName + "_" + thisHeat[:-1] + "].mp4\n"
-                    semi2 = True
-                    allData += thisHeat
+                        names[i] = names[i].replace(" - ", "_")
+                        names[i] = names[i].replace(" ", "_")
+                        names[i] = names[i].replace("-", "_")
+                        thisHeat += lanes[i] + "#" + names[i] + "-"
+                    thisHeat = "CamXX_WorldShort2018_" + thisHeat[:-1] + "].mp4\n"
+                    #allData += thisHeat
+                    # rank = False
+                    # lanes = []
+                elif rank == True and len(teams) == 0:
+                    teams = text.split("\n")
                     rank = False
+                    thisHeat = "CamA_WorldShort2018_" + prefix + "_" + str(number) + "_AgeGroup0_["
+                    if ir == "i":
+                        for i in range(len(lanes)):
+                            if teams[i] == "JPN":
+                                thisHeat += lanes[i] + "#" + names[i] + "-"
+                                jpn = True
+                    elif ir == "r":
+                        for i in range(len(lanes)):
+                            if "JPN" in names[i]:
+                                thisHeat += lanes[i] + "#" + names[i] + "-"
+                                jpn = True
+                    thisHeat = thisHeat[:-1] + "]"
+                    if jpn == True:
+                        print(thisHeat)
+                    jpn = False
                     lanes = []
+                    names = []
+                    teams = []
             elif "Men's" in text and "men" not in output_txt:
+                sptext = text
                 if text.count(os.linesep) != 1:
-                    text = text.split("\n")[0]
-                    
-                styles = text.split(" ")
+                    sptext = text.split("\n")[1]
+                    if 'Nage' in text:
+                        sptext = text.split("\n")[0]
+                styles = sptext.split(" ")
+
                 if "x" in styles[1]:
                     ir = "r"
                 output_txt += "Men_" + styles[1] + "_" + style(styles[2].split("\n")[0], ir)
-                ir = "i"
             elif "Women's" in text and "women" not in output_txt:
                 if text.count(os.linesep) != 1:
                     text = text.split("\n")[0]
@@ -161,7 +158,6 @@ with open(sys.argv[1], 'rb') as f:
                 if "x" in styles[1]:
                     ir = "r"
                 output_txt += "Women_" + styles[1] + "_" + style(styles[2].split("\n")[0], ir)
-                ir = "i"
             elif "Mixed" in text and "mixed" not in output_txt:
                 if text.count(os.linesep) != 1:
                     text = text.split("\n")[0]
@@ -169,21 +165,12 @@ with open(sys.argv[1], 'rb') as f:
                 if "x" in styles[1]:
                     ir = "r"
                 output_txt += "Mixed_" + styles[1] + "_" + style(styles[2].split("\n")[0], ir)
-                ir = "i"
-            elif "_" in output_txt and\
-                    ("Heat" not in output_txt or\
-                    "Preliminary" not in output_txt or\
-                    "Final" not in output_txt or\
-                    "Swim-Off" not in output_txt or\
-                    "Semi" not in output_txt):
+            elif "_" in output_txt and ("Final" not in output_txt or "Semi" not in output_txt):
                 output_txt += "_" + text.split("\n")[0]
-                output_txt = output_txt.replace('Preliminary','Heats')
                 prefix = output_txt
-                if "Semi" in prefix:
-                    semi = True
-            #elif "_" in output_txt and "final" not in output_txt:
-            #    output_txt += "_Final"
-            #    prefix =  output_txt
+            elif "_" in output_txt and "final" not in output_txt:
+                output_txt += "_Final"
+                prefix =  output_txt
             if "Reserves" in text:
                 break
             if "Rank" in text:
@@ -192,4 +179,4 @@ with open(sys.argv[1], 'rb') as f:
             # print_and_write('-' * 10)  # 読みやすいよう区切り線を表示する。
             # print_and_write(box.get_text().strip())  # テキストボックス内のテキストを表示する。
 
-print_and_write(allData)
+#print_and_write(allData)
